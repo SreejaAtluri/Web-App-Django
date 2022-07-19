@@ -1,0 +1,21 @@
+{% extends 'myapp/base.html' %}
+{% block title %}
+    Place order
+{% endblock %}
+{% block body_block %}
+    {% if courlist %}
+        <h2>List of Courses</h2>
+        <ol>
+            {% for course in courlist %}
+                <li><a href="{% url 'myapp:course_detail' cour_id=course.id %}">{{ course.name }} {{ course.price }}</a></li>
+            {% endfor %}
+        </ol>
+    {% else %}
+        <strong>There are no available courses!</strong>
+    {% endif %}
+    <form action="" name="form" method="post">
+        {% csrf_token%}
+        {{form}}
+        <input type="submit" value="Submit" />
+    </form>
+{% endblock %}

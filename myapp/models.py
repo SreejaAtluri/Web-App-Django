@@ -1,3 +1,6 @@
+import decimal
+
+import django
 from django.db import models
 import datetime
 from django.contrib.auth.models import User
@@ -25,7 +28,7 @@ class Course(models.Model):
         return f"{self.name}"
 
     def discount(self):
-        return (self.price - (self.price * .10))
+        return self.price - (self.price * decimal.Decimal(0.10))
 
 
 class Student(User):
@@ -43,21 +46,18 @@ class Student(User):
         return f"{self.username} ({self.first_name} {self.last_name})"
 
 
+# orders model
 class Order(models.Model):
-    ORDER_STATUS = [(0, 'Cancelled'), (1, 'Order Confirmed')]
-    # course = models.ForeignKey(Course, related_name='orders', on_delete=models.CASCADE)
-    course = models.ManyToManyField(Course, related_name='orders')
-    student = models.ForeignKey(Student, related_name='orders', on_delete=models.CASCADE)
-    levels = models.PositiveIntegerField(default=0)
-    order_status = models.IntegerField(choices=ORDER_STATUS, default=0)
-    order_date = models.DateField(auto_now_add=True)
-
-    def total_cost(self):
-        total = 0
-        objects = Order.course.all()
-        for order in objects:
-            total += order.price
-        return total
+    ORDER_CHOICES = [(0, 'Cancelled'), (1, 'Order Confirmed')]
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, )
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    levels = models.PositiveIntegerField()
+    order_status = models.IntegerField(choices=ORDER_CHOICES, default=1)
+    order_date = models.DateField(default=django.utils.timezone.now())
 
     def __str__(self):
-        return '{} ({})'.format(', '.join(self.course.all().values_list('name', flat=True)), self.order_date)
+        return self.course.name
+
+    @property
+    def total_cost(self):
+        return Order.course.price.all().aggregate(sum("price"))

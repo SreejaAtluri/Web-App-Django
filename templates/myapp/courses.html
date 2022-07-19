@@ -9,9 +9,12 @@
     {% if courlist %}
         <h2>Available Courses.</h2>
             {% for course in courlist %}
-                <li><b>{{ course.name}} </b> , price: ${{course.price}}</li>
+                <li><a href="{% url 'myapp:course_detail' cour_id=course.id %}">{{ course.name}} , price: ${{course.price}}</a></li>
             {% endfor %}
+    {% else %}
+        <strong>There are no available courses!</strong>
     {% endif %}
 
-    <h3 class="placeOrder"><a href="{% url 'myapp:courses' %}">Place a new order</a></h3>
+{#    <h3 class="placeOrder"><a href="{% url 'myapp:courses' %}">Place a new order</a></h3>#}
+    <p><a href="{% url 'myapp:place_order' %}"> Place your order here </a></p>
 {% endblock %}
