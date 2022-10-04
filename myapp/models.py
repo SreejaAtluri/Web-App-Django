@@ -1,11 +1,12 @@
 import decimal
 
 import django
+from django.contrib.auth import admin
+from django.core.exceptions import ValidationError
 from django.db import models
 import datetime
 from django.contrib.auth.models import User
 from django.utils import timezone
-
 
 class Topic(models.Model):
     name = models.CharField(max_length=200)
@@ -14,11 +15,14 @@ class Topic(models.Model):
     def __str__(self):
         return f"{self.name}"
 
+def validateprice(value):
+    if value < 50 or value > 500:
+        raise ValidationError('Course price should be between $50 and $500')
 
 class Course(models.Model):
     topic = models.ForeignKey(Topic, related_name='courses', on_delete=models.CASCADE)
     name = models.CharField(max_length=200)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2, validators=[validateprice])
     for_everyone = models.BooleanField(default=True)
     description = models.TextField(max_length=300, null=True, blank=True)
     interested = models.PositiveIntegerField(default=0)
@@ -30,7 +34,6 @@ class Course(models.Model):
     def discount(self):
         return self.price - (self.price * decimal.Decimal(0.10))
 
-
 class Student(User):
     class Meta:
         verbose_name = 'Student'
@@ -41,6 +44,7 @@ class Student(User):
     school = models.CharField(max_length=50, null=True, blank=True)
     city = models.CharField(max_length=2, choices=CITY_CHOICES, default='WS')
     interested_in = models.ManyToManyField(Topic, related_name='students')
+    image = models.ImageField(null=True, blank=True, upload_to='images/')
 
     def __str__(self):
         return f"{self.username} ({self.first_name} {self.last_name})"
@@ -61,3 +65,9 @@ class Order(models.Model):
     @property
     def total_cost(self):
         return Order.course.price.all().aggregate(sum("price"))
+
+
+class PasswordReset(models.Model):
+    username = models.CharField(max_length=200)
+    def __str__(self):
+        return self.username

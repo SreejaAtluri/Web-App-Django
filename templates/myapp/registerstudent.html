@@ -1,0 +1,12 @@
+{% extends 'myapp/base.html' %}
+{% block body_block %}
+    <div style="background-color: #efebe9; padding: 3%;">
+     <h2>Register as a student!!</h2>
+    <form method="POST" action="" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" name="Register User">
+    {{ form.errors }}
+    </form>
+    </div>
+{% endblock %}

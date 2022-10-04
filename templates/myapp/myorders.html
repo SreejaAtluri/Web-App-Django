@@ -1,0 +1,39 @@
+{% extends 'myapp/base.html' %}
+{% block body_block %}
+    <div style="background-color: #efebe9; padding: 3%;">
+{% if student %}
+        {% if orders %}
+            {% if orders|length > 0 %}
+                <h2> Your Orders</h2>
+                <table>
+                    <thead>
+                        <tr>
+                          <th scope="col">Course</th>
+                          <th scope="col">Price</th>
+                          <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for order in orders %}
+                        <tr>
+                        <td>{{ order.course.name }}</td>
+                        <td>Price: {{ order.course.price }}</td>
+                        {% if order.order_status == 1 %}
+                            <td>Confirmed </td>
+                        {% else %}
+                            <td>Cancelled </td>
+                        {% endif %}
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+                {% endif %}
+            {% else %}
+                <div class="mx-3 lead"><strong>No Order Placed</strong></div>
+        {% endif %}
+    {% else %}
+        <strong> You are not a registered student!!</strong>
+    {% endif %}
+    </div>
+
+{% endblock %}

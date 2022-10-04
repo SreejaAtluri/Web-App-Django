@@ -3,7 +3,8 @@
     Course Details
 {% endblock %}
 {% block body_block %}
-    {% if courlist %}
+    <div style="background-color: #efebe9; padding: 3%;">
+{% if courlist %}
         <h2>List of Courses</h2>
         <ol>
             <p>Course Name - Interested # - Price</p>
@@ -19,4 +20,6 @@
         {{form}}
         <input type="submit" value="Submit" />
     </form>
+    </div>
+
 {% endblock %}

@@ -5,8 +5,8 @@
 {% endblock %}
 
 {% block body_block %}
-
-    {% if courlist %}
+<div style="background-color: #efebe9; padding: 3%;">
+ {% if courlist %}
         <h2>Available Courses.</h2>
             {% for course in courlist %}
                 <li><a href="{% url 'myapp:course_detail' cour_id=course.id %}">{{ course.name}} , price: ${{course.price}}</a></li>
@@ -17,4 +17,6 @@
 
 {#    <h3 class="placeOrder"><a href="{% url 'myapp:courses' %}">Place a new order</a></h3>#}
     <p><a href="{% url 'myapp:place_order' %}"> Place your order here </a></p>
+</div>
+
 {% endblock %}
